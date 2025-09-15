@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script>
       tailwind.config = {
+        darkMode: 'class', // Enable dark mode
         theme: {
           extend: {
             fontFamily: {
@@ -20,7 +21,7 @@
             colors: {
               'brand-gray': {
                 light: '#B0B0B0',
-                DEFAULT: '#B0B0B0',
+                DEFAULT: '#F5F5F5', // Lighter default for background
                 dark: '#e0e0e0',
               },
               'brand-dark': {
@@ -56,7 +57,6 @@
         .rocket-cursor {
             pointer-events: none;
             position: fixed;
-            /* Adjust offsets for the tip of the rocket */
             top: -100px;
             left: -25px;
             z-index: 9999;
@@ -105,9 +105,46 @@
         .service-card.clicked {
             animation: bubble 0.6s ease-out;
         }
+
+        /* Hero Background Animation */
+        @keyframes gentle-float {
+            0%, 100% { transform: translateY(0) rotate(-45deg); }
+            50% { transform: translateY(-20px) rotate(-43deg); }
+        }
+        .hero-bg-icon {
+            animation: gentle-float 6s ease-in-out infinite;
+        }
+        
+        /* Testimonial Slider */
+        .testimonial-slide {
+            flex: 0 0 100%;
+            width: 100%;
+        }
+
+        /* FAQ Accordion */
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+        }
+        .faq-item.active .faq-content {
+            max-height: 500px; /* Adjust as needed */
+        }
+        .faq-item.active .faq-toggle-icon {
+            transform: rotate(45deg);
+        }
+        
+        /* Form Validation */
+        input.invalid, textarea.invalid {
+            border: 2px solid #ef4444; /* red-500 */
+        }
+        .error-message {
+            transition: opacity 0.3s ease;
+        }
+
     </style>
 </head>
-<body class="bg-brand-gray font-poppins antialiased text-brand-dark overflow-x-hidden cursor-none">
+<body class="bg-brand-gray font-poppins antialiased text-brand-dark dark:bg-brand-dark dark:text-brand-gray-dark overflow-x-hidden cursor-none">
 
     <!-- Rocket Cursor Element -->
     <div class="rocket-cursor">
@@ -118,15 +155,11 @@
                 <path fill="#F44336" d="M35 130 C 40 120, 30 120, 35 130" />
             </g>
             <g class="rocket-body">
-                <!-- Fins -->
                 <path fill="#ff6941" d="M20 90 L 5 110 L 20 100 Z" />
                 <path fill="#ff6941" d="M50 90 L 65 110 L 50 100 Z" />
-                <!-- Body -->
                 <path fill="#E0E0E0" d="M20 20 C 20 0, 50 0, 50 20 L 50 100 L 20 100 Z" />
-                <!-- Window -->
                 <circle fill="#B0B0B0" cx="35" cy="45" r="12" />
                 <circle fill="#81D4FA" cx="35" cy="45" r="10" />
-                <!-- Tip -->
                 <path fill="#ff6941" d="M20 20 Q 35 0, 50 20 Z" />
             </g>
         </svg>
@@ -134,77 +167,82 @@
 
 
     <!-- Header -->
-    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-brand-gray">
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-brand-gray dark:bg-brand-dark">
         <div class="container mx-auto px-6 py-2 flex justify-between items-center">
             <a href="#home" class="flex-shrink-0">
                 <svg width="180" height="80" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 30L35 15L50 45L65 5" stroke="#263238" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                    <text x="75" y="40" font-family="Poppins, sans-serif" font-size="28" font-weight="bold" fill="#263238">Rocket</text>
+                    <path d="M20 30L35 15L50 45L65 5" stroke="#263238" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="dark:stroke-white"/>
+                    <text x="75" y="40" font-family="Poppins, sans-serif" font-size="28" font-weight="bold" fill="#263238" class="dark:fill-white">Rocket</text>
                     <text x="110" y="52" font-family="Poppins, sans-serif" font-size="16" font-weight="bold" fill="#ff6941">Transform</text>
                 </svg>
             </a>
 
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="#home" class="text-brand-dark font-semibold hover:text-brand-accent transition-colors duration-300">Home</a>
-                <a href="#about" class="text-brand-dark font-semibold hover:text-brand-accent transition-colors duration-300">About</a>
-                <a href="#services" class="text-brand-dark font-semibold hover:text-brand-accent transition-colors duration-300">Services</a>
-                <a href="#how-it-works" class="text-brand-dark font-semibold hover:text-brand-accent transition-colors duration-300">How it Works</a>
+                <a href="#home" class="text-brand-dark dark:text-brand-gray-dark font-semibold hover:text-brand-accent transition-colors duration-300">Home</a>
+                <a href="#about" class="text-brand-dark dark:text-brand-gray-dark font-semibold hover:text-brand-accent transition-colors duration-300">About</a>
+                <a href="#services" class="text-brand-dark dark:text-brand-gray-dark font-semibold hover:text-brand-accent transition-colors duration-300">Services</a>
+                <a href="#how-it-works" class="text-brand-dark dark:text-brand-gray-dark font-semibold hover:text-brand-accent transition-colors duration-300">How it Works</a>
             </nav>
 
             <div class="hidden md:flex items-center space-x-4">
                 <a href="#contact">
-                    <button class="bg-brand-dark text-brand-gray-dark px-6 py-2 rounded-md font-bold hover:bg-brand-dark-dark transition-colors duration-300 transform hover:scale-105">
+                    <button class="bg-brand-dark text-brand-gray-dark px-6 py-2 rounded-md font-bold hover:bg-brand-dark-dark transition-colors duration-300 transform hover:scale-105 dark:bg-brand-gray dark:text-brand-dark dark:hover:bg-brand-gray-light">
                         Join Now
                     </button>
                 </a>
-                <a href="#" class="bg-brand-dark text-brand-gray-dark h-10 w-10 rounded-full flex items-center justify-center hover:bg-brand-dark-dark transition-colors duration-300 transform hover:scale-105">
+                <button id="theme-toggle" class="bg-brand-dark text-brand-gray-dark h-10 w-10 rounded-full flex items-center justify-center hover:bg-brand-dark-dark transition-colors duration-300 transform hover:scale-105 dark:bg-brand-gray dark:text-brand-dark dark:hover:bg-brand-gray-light">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="#" class="bg-brand-dark text-brand-gray-dark h-10 w-10 rounded-full flex items-center justify-center hover:bg-brand-dark-dark transition-colors duration-300 transform hover:scale-105 dark:bg-brand-gray dark:text-brand-dark dark:hover:bg-brand-gray-light">
                     <i class="fa-regular fa-user"></i>
                 </a>
             </div>
 
             <div class="md:hidden">
-                <button id="menu-btn" class="text-brand-dark text-2xl z-[60] relative">
+                <button id="menu-btn" class="text-brand-dark dark:text-brand-gray-dark text-2xl z-[60] relative">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
         </div>
       
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="md:hidden fixed top-0 left-0 w-full h-full bg-brand-gray/95 backdrop-blur-xl transition-transform duration-500 ease-in-out transform -translate-x-full">
+        <div id="mobile-menu" class="md:hidden fixed top-0 left-0 w-full h-full bg-brand-gray/95 dark:bg-brand-dark/95 backdrop-blur-xl transition-transform duration-500 ease-in-out transform -translate-x-full">
             <div class="flex flex-col items-center justify-center h-full space-y-8">
-                <a href="#home" class="mobile-link text-brand-dark text-2xl font-bold hover:text-brand-accent transition-colors duration-300">Home</a>
-                <a href="#about" class="mobile-link text-brand-dark text-2xl font-bold hover:text-brand-accent transition-colors duration-300">About</a>
-                <a href="#services" class="mobile-link text-brand-dark text-2xl font-bold hover:text-brand-accent transition-colors duration-300">Services</a>
-                <a href="#how-it-works" class="mobile-link text-brand-dark text-2xl font-bold hover:text-brand-accent transition-colors duration-300">How it Works</a>
+                <a href="#home" class="mobile-link text-brand-dark dark:text-brand-gray-dark text-2xl font-bold hover:text-brand-accent transition-colors duration-300">Home</a>
+                <a href="#about" class="mobile-link text-brand-dark dark:text-brand-gray-dark text-2xl font-bold hover:text-brand-accent transition-colors duration-300">About</a>
+                <a href="#services" class="mobile-link text-brand-dark dark:text-brand-gray-dark text-2xl font-bold hover:text-brand-accent transition-colors duration-300">Services</a>
+                <a href="#how-it-works" class="mobile-link text-brand-dark dark:text-brand-gray-dark text-2xl font-bold hover:text-brand-accent transition-colors duration-300">How it Works</a>
                 <a href="#contact" class="mobile-link">
-                    <button class="bg-brand-dark text-brand-gray-dark px-8 py-3 rounded-lg font-bold hover:bg-brand-dark-dark transition-colors duration-300 text-xl">
+                    <button class="bg-brand-dark text-brand-gray-dark px-8 py-3 rounded-lg font-bold hover:bg-brand-dark-dark transition-colors duration-300 text-xl dark:bg-brand-gray dark:text-brand-dark dark:hover:bg-brand-gray-light">
                     Join Now
                     </button>
                 </a>
+                <button id="theme-toggle-mobile" class="bg-brand-dark text-brand-gray-dark px-8 py-3 rounded-lg font-bold hover:bg-brand-dark-dark transition-colors duration-300 text-xl dark:bg-brand-gray dark:text-brand-dark dark:hover:bg-brand-gray-light">
+                    <i class="fas fa-moon mr-2"></i> Toggle Theme
+                </button>
             </div>
         </div>
     </header>
 
     <main>
         <!-- Hero Section -->
-        <section id="home" class="min-h-screen pt-24 flex items-center bg-brand-gray relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-br from-brand-gray via-brand-gray-light/50 to-brand-gray"></div>
+        <section id="home" class="min-h-screen pt-24 flex items-center bg-brand-gray dark:bg-brand-dark relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-brand-gray via-brand-gray-light/50 to-brand-gray dark:from-brand-dark dark:via-brand-dark-light/10 dark:to-brand-dark"></div>
             
-            <!-- Background Icon -->
             <div class="absolute inset-0 flex items-center justify-center z-0 overflow-hidden">
-                <i class="fas fa-rocket text-brand-dark/5" style="font-size: 30rem; transform: rotate(-45deg);"></i>
+                <i class="fas fa-rocket text-brand-dark/5 dark:text-brand-gray/5 hero-bg-icon" style="font-size: 30rem;"></i>
             </div>
             
             <div class="container mx-auto px-6 flex items-center justify-center relative z-10">
                 <div class="w-full md:w-5/6 lg:w-4/5 text-center">
                     <div class="fade-in-element">
-                        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-brand-dark leading-tight">
+                        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-brand-dark dark:text-brand-gray-dark leading-tight">
                             Empowering Brands to <span class="font-bold text-brand-accent">Grow, Engage, and Thrive</span> in the Digital World!
                         </h1>
                     </div>
                     <div class="fade-in-element" style="transition-delay: 200ms;">
                         <a href="#contact">
-                            <button class="mt-8 bg-brand-dark text-brand-gray-dark px-8 py-3 rounded-lg font-bold hover:bg-brand-dark-dark transition-all duration-300 transform hover:scale-105 shadow-lg">
+                            <button class="mt-8 bg-brand-dark text-brand-gray-dark px-8 py-3 rounded-lg font-bold hover:bg-brand-dark-dark transition-all duration-300 transform hover:scale-105 shadow-lg dark:bg-brand-gray dark:text-brand-dark dark:hover:bg-brand-gray-light">
                                 Contact Us
                             </button>
                         </a>
@@ -214,34 +252,34 @@
         </section>
 
         <!-- About Section -->
-        <section id="about" class="py-24 bg-brand-gray">
+        <section id="about" class="py-24 bg-brand-gray dark:bg-brand-dark">
             <div class="container mx-auto px-6">
                 <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-24 mb-24">
                     <div class="w-full lg:w-2/5 fade-in-element flex items-center justify-center">
-                        <div class="w-80 h-80 bg-brand-dark-light/10 rounded-full flex items-center justify-center p-8">
-                             <i class="fas fa-users text-9xl text-brand-dark-light/50"></i>
+                        <div class="w-80 h-80 bg-brand-dark-light/10 dark:bg-brand-gray/10 rounded-full flex items-center justify-center p-8">
+                             <i class="fas fa-users text-9xl text-brand-dark-light/50 dark:text-brand-gray/50"></i>
                         </div>
                     </div>
                     <div class="w-full lg:w-3/5">
-                        <div class="fade-in-element"><h1 class="text-5xl md:text-6xl font-semibold text-brand-dark-light mb-4">About Us</h1></div>
+                        <div class="fade-in-element"><h1 class="text-5xl md:text-6xl font-semibold text-brand-dark-light dark:text-brand-gray-dark mb-4">About Us</h1></div>
                         <div class="fade-in-element" style="transition-delay: 150ms;"><h4 class="text-2xl md:text-3xl font-medium text-brand-accent-light mb-6">Turning clicks into connections, and ideas into impact.</h4></div>
-                        <div class="fade-in-element" style="transition-delay: 300ms;"><p class="text-brand-dark text-lg font-light leading-relaxed text-justify">We are a passionate team of digital marketing experts dedicated to helping brands grow, engage, and thrive in the digital world. With a blend of creativity, strategy, and cutting-edge technology, we bring your brand's vision to life.</p></div>
+                        <div class="fade-in-element" style="transition-delay: 300ms;"><p class="text-brand-dark dark:text-brand-gray text-lg font-light leading-relaxed text-justify">We are a passionate team of digital marketing experts dedicated to helping brands grow, engage, and thrive in the digital world. With a blend of creativity, strategy, and cutting-edge technology, we bring your brand's vision to life.</p></div>
                     </div>
                 </div>
 
-                <div class="relative py-24 bg-brand-dark/5 bg-cover bg-center rounded-3xl">
+                <div class="relative py-24 bg-brand-dark/5 dark:bg-white/5 bg-cover bg-center rounded-3xl">
                     <div class="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6">
-                        <div class="fade-in-element bg-brand-dark-dark/90 text-brand-gray rounded-3xl p-8 h-full flex flex-col hover:bg-brand-dark-dark transition-all duration-300 transform hover:-translate-y-2 shadow-xl">
+                        <div class="fade-in-element bg-brand-dark-dark/90 text-brand-gray rounded-3xl p-8 h-full flex flex-col hover:bg-brand-dark-dark transition-all duration-300 transform hover:-translate-y-2 shadow-xl dark:bg-black/50 dark:hover:bg-black/80">
                             <i class="fas fa-rocket text-5xl text-brand-accent-light self-center mb-6"></i>
                             <h4 class="text-brand-accent-light text-2xl font-semibold mb-4 text-center">OUR MISSION</h4>
                             <p class="text-brand-gray text-center font-light leading-relaxed">To empower businesses of all sizes to reach their full potential online by crafting tailored digital marketing strategies that deliver measurable results.</p>
                         </div>
-                        <div class="fade-in-element bg-brand-dark-dark/90 text-brand-gray rounded-3xl p-8 h-full flex flex-col hover:bg-brand-dark-dark transition-all duration-300 transform hover:-translate-y-2 shadow-xl" style="transition-delay: 200ms;">
+                        <div class="fade-in-element bg-brand-dark-dark/90 text-brand-gray rounded-3xl p-8 h-full flex flex-col hover:bg-brand-dark-dark transition-all duration-300 transform hover:-translate-y-2 shadow-xl dark:bg-black/50 dark:hover:bg-black/80" style="transition-delay: 200ms;">
                             <i class="fas fa-lightbulb text-5xl text-brand-accent-light self-center mb-6"></i>
                             <h4 class="text-brand-accent-light text-2xl font-semibold mb-4 text-center">OUR APPROACH</h4>
                             <p class="text-brand-gray text-center font-light leading-relaxed">We believe in a data-driven approach combined with creative insights. We create customized strategies that not only meet but exceed your business goals.</p>
                         </div>
-                        <div class="fade-in-element bg-brand-dark-dark/90 text-brand-gray rounded-3xl p-8 h-full flex flex-col hover:bg-brand-dark-dark transition-all duration-300 transform hover:-translate-y-2 shadow-xl" style="transition-delay: 400ms;">
+                        <div class="fade-in-element bg-brand-dark-dark/90 text-brand-gray rounded-3xl p-8 h-full flex flex-col hover:bg-brand-dark-dark transition-all duration-300 transform hover:-translate-y-2 shadow-xl dark:bg-black/50 dark:hover:bg-black/80" style="transition-delay: 400ms;">
                             <i class="fas fa-book-open text-5xl text-brand-accent-light self-center mb-6"></i>
                             <h4 class="text-brand-accent-light text-2xl font-semibold mb-4 text-center">OUR STORY</h4>
                             <p class="text-brand-gray text-center font-light leading-relaxed">Born from a desire to help businesses navigate the complexities of the digital world with confidence and creativity.</p>
@@ -252,10 +290,10 @@
         </section>
 
         <!-- Services Section -->
-        <section id="services" class="py-24 bg-brand-gray-light bg-opacity-50">
+        <section id="services" class="py-24 bg-brand-gray-light/30 dark:bg-brand-dark-dark/30">
             <div class="container mx-auto px-6">
                 <div class="fade-in-element">
-                    <h1 class="text-5xl md:text-6xl font-semibold text-brand-dark-dark text-center mb-16">Our Services</h1>
+                    <h1 class="text-5xl md:text-6xl font-semibold text-brand-dark-dark dark:text-brand-gray-dark text-center mb-16">Our Services</h1>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     <!-- Service cards will be populated by JS for interactivity -->
@@ -264,15 +302,15 @@
         </section>
 
         <!-- How It Works Section -->
-        <section id="how-it-works" class="py-24 bg-brand-gray bg-gradient-to-b from-transparent via-brand-accent-dark/10 to-transparent">
+        <section id="how-it-works" class="py-24 bg-brand-gray dark:bg-brand-dark bg-gradient-to-b from-transparent via-brand-accent-dark/10 to-transparent">
             <div class="container mx-auto px-6">
-                <div class="fade-in-element"><h1 class="text-5xl md:text-7xl font-bold text-brand-dark-dark text-center mb-24">This is How it Works</h1></div>
+                <div class="fade-in-element"><h1 class="text-5xl md:text-7xl font-bold text-brand-dark-dark dark:text-brand-gray-dark text-center mb-24">This is How it Works</h1></div>
                 <div class="space-y-24">
                     <!-- Steps will be populated by JS -->
                 </div>
             </div>
             
-            <div class="mt-24 pt-24 bg-brand-dark-dark/5">
+            <div class="mt-24 pt-24 bg-brand-dark-dark/5 dark:bg-white/5">
                 <div class="py-24">
                     <div class="container mx-auto px-6">
                         <div class="fade-in-element"><h2 class="text-5xl md:text-6xl font-bold text-brand-accent-dark text-center mb-16">Why Us</h2></div>
@@ -283,30 +321,64 @@
                 </div>
             </div>
         </section>
+        
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="py-24 bg-brand-gray-light/50 dark:bg-brand-dark-dark/20">
+            <div class="container mx-auto px-6">
+                <h1 class="text-5xl md:text-6xl font-semibold text-brand-dark-dark dark:text-brand-gray-dark text-center mb-16 fade-in-element">What Our Clients Say</h1>
+                <div class="relative fade-in-element max-w-4xl mx-auto">
+                    <div id="testimonial-slider" class="overflow-hidden rounded-2xl">
+                        <div id="testimonial-track" class="flex transition-transform duration-500 ease-in-out">
+                            <!-- Testimonials will be populated by JS -->
+                        </div>
+                    </div>
+                    <button id="prev-testimonial" aria-label="Previous testimonial" class="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-4 bg-brand-dark text-white h-12 w-12 rounded-full flex items-center justify-center shadow-lg hover:bg-brand-accent transition-colors z-10 dark:bg-brand-gray dark:text-brand-dark dark:hover:bg-brand-accent">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button id="next-testimonial" aria-label="Next testimonial" class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-4 bg-brand-dark text-white h-12 w-12 rounded-full flex items-center justify-center shadow-lg hover:bg-brand-accent transition-colors z-10 dark:bg-brand-gray dark:text-brand-dark dark:hover:bg-brand-accent">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="py-24 bg-brand-gray dark:bg-brand-dark-dark">
+            <div class="container mx-auto px-6">
+                <h1 class="text-5xl md:text-7xl font-bold text-brand-dark-dark dark:text-brand-gray-dark text-center mb-16 fade-in-element">Frequently Asked Questions</h1>
+                <div id="faq-container" class="max-w-4xl mx-auto space-y-4 fade-in-element">
+                    <!-- FAQs populated by JS -->
+                </div>
+            </div>
+        </section>
 
         <!-- Contact Section -->
-        <section id="contact" class="py-24 bg-gradient-to-t from-brand-gray to-brand-dark-dark">
+        <section id="contact" class="py-24 bg-gradient-to-t from-brand-gray to-brand-dark-dark dark:from-brand-dark-dark dark:to-black">
             <div class="container mx-auto px-6 flex flex-col lg:flex-row items-center gap-12">
                 <div class="w-full lg:w-1/2 fade-in-element">
                     <div class="bg-brand-accent p-8 sm:p-12 rounded-2xl shadow-2xl">
                         <div class="fade-in-element"><h2 class="text-4xl font-bold text-white text-center mb-8">Contact Us</h2></div>
                         <div id="contact-form-container">
-                            <form id="contact-form" class="space-y-6">
+                            <form id="contact-form" class="space-y-4">
                                 <div>
                                     <label for="name" class="block text-brand-dark text-sm font-bold mb-2">Full Name</label>
                                     <input type="text" id="name" name="name" placeholder="Your Name" required class="w-full px-4 py-3 rounded-lg bg-white/90 text-brand-dark focus:outline-none focus:ring-2 focus:ring-white transition"/>
+                                    <p class="error-message text-red-900 font-semibold text-sm mt-1 h-4"></p>
                                 </div>
                                 <div>
                                     <label for="email" class="block text-brand-dark text-sm font-bold mb-2">Email</label>
                                     <input type="email" id="email" name="email" placeholder="Your Email" required class="w-full px-4 py-3 rounded-lg bg-white/90 text-brand-dark focus:outline-none focus:ring-2 focus:ring-white transition"/>
+                                    <p class="error-message text-red-900 font-semibold text-sm mt-1 h-4"></p>
                                 </div>
                                 <div>
                                     <label for="company" class="block text-brand-dark text-sm font-bold mb-2">Company Name</label>
-                                    <input type="text" id="company" name="company" placeholder="Your Company Name" required class="w-full px-4 py-3 rounded-lg bg-white/90 text-brand-dark focus:outline-none focus:ring-2 focus:ring-white transition"/>
+                                    <input type="text" id="company" name="company" placeholder="Your Company Name" class="w-full px-4 py-3 rounded-lg bg-white/90 text-brand-dark focus:outline-none focus:ring-2 focus:ring-white transition"/>
+                                    <p class="error-message text-red-900 font-semibold text-sm mt-1 h-4"></p>
                                 </div>
                                 <div>
                                     <label for="enquiry" class="block text-brand-dark text-sm font-bold mb-2">Enquiry</label>
                                     <textarea id="enquiry" name="enquiry" placeholder="Your Enquiry" rows="5" required class="w-full px-4 py-3 rounded-lg bg-white/90 text-brand-dark focus:outline-none focus:ring-2 focus:ring-white transition resize-none"></textarea>
+                                    <p class="error-message text-red-900 font-semibold text-sm mt-1 h-4"></p>
                                 </div>
                                 <button type="submit" class="w-full bg-brand-dark text-white font-bold py-3 px-6 rounded-lg hover:bg-brand-dark-dark transition-colors duration-300 transform hover:scale-105">
                                     Submit
@@ -324,7 +396,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-brand-dark-dark text-brand-gray-dark py-6">
+    <footer class="bg-brand-dark-dark text-brand-gray-dark py-6 dark:bg-black">
       <div class="container mx-auto px-6 text-center">
         <p class="text-sm">
           <i class="fa-regular fa-copyright mr-2"></i>
@@ -365,141 +437,335 @@
                 { icon: 'fas fa-headset', title: 'Dedicated Client Support', description: 'Receive personalized guidance and support from a dedicated account manager.' },
             ];
 
+            const testimonialsData = [
+                { name: 'Jane Doe', company: 'Tech Solutions Inc.', quote: 'RocketTransform completely revitalized our online presence. Their SEO strategies are second to none, and our organic traffic has tripled in just six months!' },
+                { name: 'John Smith', company: 'Creative Designs Co.', quote: 'The team at RocketTransform is incredibly talented. They delivered a stunning website that perfectly captures our brand and has significantly improved our user engagement.' },
+                { name: 'Emily White', company: 'Global Exports', quote: 'Their data-driven approach to PPC has maximized our ROI beyond expectations. We highly recommend their services to anyone looking for measurable results.' },
+            ];
+
+            const faqData = [
+                { question: 'How long does it take to see results from SEO?', answer: 'SEO is a long-term strategy. While some improvements can be seen in as little as a few weeks, it typically takes 4-6 months to see significant, lasting results as search engines index changes and user engagement patterns shift.' },
+                { question: 'What social media platforms do you manage?', answer: 'We manage all major social media platforms, including Facebook, Instagram, Twitter, LinkedIn, Pinterest, and TikTok. We tailor our strategy to the platforms where your target audience is most active.' },
+                { question: 'Do you offer one-time projects or only monthly retainers?', answer: 'We offer both! While we recommend ongoing monthly retainers for sustained growth and optimization, we are also available for one-time projects like website redesigns, SEO audits, or specific campaign setups.' },
+                { question: 'How do you measure the success of a campaign?', answer: 'Success is measured against the key performance indicators (KPIs) we establish during the planning phase. These can include metrics like website traffic, conversion rates, cost per acquisition (CPA), return on ad spend (ROAS), and engagement rates.' },
+            ];
+
             // --- RENDER DYNAMIC CONTENT ---
-            const servicesContainer = document.querySelector('#services .grid');
-            servicesData.forEach((service, index) => {
-                const serviceEl = document.createElement('div');
-                serviceEl.className = 'fade-in-element';
-                serviceEl.style.transitionDelay = `${index * 100}ms`;
-                serviceEl.innerHTML = `
-                    <div class="service-card bg-brand-accent p-8 rounded-3xl text-center h-full flex flex-col items-center transform hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                        <div class="bg-white/20 h-20 w-20 rounded-full flex items-center justify-center mb-6">
-                            <i class="${service.iconClass} text-4xl text-white"></i>
-                        </div>
-                        <h4 class="text-xl font-bold text-white mb-4">${service.title}</h4>
-                        <p class="text-brand-dark-dark font-light leading-relaxed">${service.description}</p>
-                    </div>`;
-                servicesContainer.appendChild(serviceEl);
-            });
-            
-            const stepsContainer = document.querySelector('#how-it-works .space-y-24');
-            stepsData.forEach((step, index) => {
-                const isOdd = (index + 1) % 2 !== 0;
-                const stepEl = document.createElement('div');
-                stepEl.className = 'fade-in-element';
-                stepEl.innerHTML = `
-                    <div class="flex flex-col md:flex-row items-center gap-12 ${!isOdd ? 'md:flex-row-reverse' : ''}">
-                        <div class="w-full md:w-1/2 flex justify-center">
-                             <div class="w-60 h-60 bg-brand-dark-light/5 rounded-full flex flex-col items-center justify-center p-8 text-center">
-                                <span class="text-6xl font-bold text-brand-accent-light mb-2">0${index+1}</span>
-                                <i class="${step.icon} text-7xl text-brand-dark-light/30"></i>
-                             </div>
-                        </div>
-                        <div class="w-full md:w-1/2">
-                            <h4 class="text-3xl sm:text-4xl font-semibold text-brand-accent-light mb-4">${step.title}</h4>
-                            <p class="text-brand-dark-light text-lg leading-relaxed">${step.description}</p>
-                        </div>
-                    </div>`;
-                stepsContainer.appendChild(stepEl);
-            });
-
-            const featuresContainer = document.querySelector('#how-it-works .grid');
-            featuresData.forEach((feature, index) => {
-                const featureEl = document.createElement('div');
-                featureEl.className = 'fade-in-element text-center p-6';
-                featureEl.style.transitionDelay = `${index * 100}ms`;
-                featureEl.innerHTML = `
-                    <div class="flex justify-center mb-4">
-                        <i class="${feature.icon} text-5xl text-brand-accent"></i>
-                    </div>
-                    <h6 class="text-xl font-semibold text-brand-accent mb-2">${feature.title}</h6>
-                    <p class="text-brand-gray-dark font-light max-w-xs mx-auto">${feature.description}</p>`;
-                featuresContainer.appendChild(featureEl);
-            });
-
-
-            // --- INTERACTIVITY ---
-
-            // Header Scroll Effect
-            const header = document.getElementById('header');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 10) {
-                    header.classList.add('bg-brand-gray/80', 'backdrop-blur-lg', 'shadow-md');
-                } else {
-                    header.classList.remove('bg-brand-gray/80', 'backdrop-blur-lg', 'shadow-md');
-                }
-            });
-
-            // Mobile Menu
-            const menuBtn = document.getElementById('menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const mobileLinks = document.querySelectorAll('.mobile-link');
-            const menuIcon = menuBtn.querySelector('i');
-
-            const toggleMenu = () => {
-                const isOpen = mobileMenu.classList.toggle('-translate-x-full');
-                mobileMenu.classList.toggle('translate-x-0');
-                menuIcon.className = isOpen ? 'fas fa-bars' : 'fas fa-times';
+            const renderServices = () => {
+                const container = document.querySelector('#services .grid');
+                if (!container) return;
+                servicesData.forEach((service, index) => {
+                    const el = document.createElement('div');
+                    el.className = 'fade-in-element';
+                    el.style.transitionDelay = `${index * 100}ms`;
+                    el.innerHTML = `
+                        <div class="service-card bg-brand-accent p-8 rounded-3xl text-center h-full flex flex-col items-center transform hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer">
+                            <div class="bg-white/20 h-20 w-20 rounded-full flex items-center justify-center mb-6">
+                                <i class="${service.iconClass} text-4xl text-white"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-4">${service.title}</h4>
+                            <p class="text-brand-dark-dark font-light leading-relaxed">${service.description}</p>
+                        </div>`;
+                    container.appendChild(el);
+                });
             };
 
-            menuBtn.addEventListener('click', toggleMenu);
-            mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+            const renderSteps = () => {
+                const container = document.querySelector('#how-it-works .space-y-24');
+                if (!container) return;
+                stepsData.forEach((step, index) => {
+                    const isOdd = (index + 1) % 2 !== 0;
+                    const el = document.createElement('div');
+                    el.className = 'fade-in-element';
+                    el.innerHTML = `
+                        <div class="flex flex-col md:flex-row items-center gap-12 ${!isOdd ? 'md:flex-row-reverse' : ''}">
+                            <div class="w-full md:w-1/2 flex justify-center">
+                                 <div class="w-60 h-60 bg-brand-dark-light/5 dark:bg-white/5 rounded-full flex flex-col items-center justify-center p-8 text-center">
+                                    <span class="text-6xl font-bold text-brand-accent-light mb-2">0${index+1}</span>
+                                    <i class="${step.icon} text-7xl text-brand-dark-light/30 dark:text-white/30"></i>
+                                 </div>
+                            </div>
+                            <div class="w-full md:w-1/2">
+                                <h4 class="text-3xl sm:text-4xl font-semibold text-brand-accent-light mb-4">${step.title}</h4>
+                                <p class="text-brand-dark-light dark:text-brand-gray-light text-lg leading-relaxed">${step.description}</p>
+                            </div>
+                        </div>`;
+                    container.appendChild(el);
+                });
+            };
 
-            // Fade-in on Scroll
-            const fadeInElements = document.querySelectorAll('.fade-in-element');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
+            const renderFeatures = () => {
+                const container = document.querySelector('#how-it-works .grid');
+                if (!container) return;
+                featuresData.forEach((feature, index) => {
+                    const el = document.createElement('div');
+                    el.className = 'fade-in-element text-center p-6';
+                    el.style.transitionDelay = `${index * 100}ms`;
+                    el.innerHTML = `
+                        <div class="flex justify-center mb-4">
+                            <i class="${feature.icon} text-5xl text-brand-accent"></i>
+                        </div>
+                        <h6 class="text-xl font-semibold text-brand-accent mb-2">${feature.title}</h6>
+                        <p class="text-brand-dark dark:text-brand-gray-light font-light max-w-xs mx-auto">${feature.description}</p>`;
+                    container.appendChild(el);
+                });
+            };
+            
+            const renderTestimonials = () => {
+                const track = document.getElementById('testimonial-track');
+                if (!track) return;
+                testimonialsData.forEach(testimonial => {
+                    const el = document.createElement('div');
+                    el.className = 'testimonial-slide p-8 bg-white dark:bg-brand-dark-dark rounded-2xl shadow-lg';
+                    el.innerHTML = `
+                        <p class="text-lg font-light text-brand-dark dark:text-brand-gray mb-6">"${testimonial.quote}"</p>
+                        <div class="text-right">
+                            <p class="font-bold text-brand-accent">${testimonial.name}</p>
+                            <p class="text-sm text-brand-dark/70 dark:text-brand-gray/70">${testimonial.company}</p>
+                        </div>`;
+                    track.appendChild(el);
+                });
+            };
+
+            const renderFaqs = () => {
+                const container = document.getElementById('faq-container');
+                if (!container) return;
+                faqData.forEach(faq => {
+                    const el = document.createElement('div');
+                    el.className = 'faq-item bg-brand-gray-light/50 dark:bg-brand-dark-light/10 rounded-lg';
+                    el.innerHTML = `
+                        <button class="faq-header w-full flex justify-between items-center text-left p-6">
+                            <h3 class="text-lg font-semibold text-brand-dark-dark dark:text-brand-gray-dark">${faq.question}</h3>
+                            <i class="fas fa-plus text-brand-accent text-xl transition-transform duration-300 faq-toggle-icon"></i>
+                        </button>
+                        <div class="faq-content">
+                             <p class="px-6 pb-6 text-brand-dark dark:text-brand-gray">${faq.answer}</p>
+                        </div>
+                    `;
+                    container.appendChild(el);
+                });
+            };
+
+            // --- INTERACTIVITY ---
+            
+            const initTheme = () => {
+                const themeToggleBtns = document.querySelectorAll('#theme-toggle, #theme-toggle-mobile');
+                const themeIcons = document.querySelectorAll('#theme-toggle i, #theme-toggle-mobile i');
+                const html = document.documentElement;
+
+                const applyTheme = (theme) => {
+                    if (theme === 'dark') {
+                        html.classList.add('dark');
+                        themeIcons.forEach(icon => icon.className = 'fas fa-sun');
+                    } else {
+                        html.classList.remove('dark');
+                        themeIcons.forEach(icon => icon.className = 'fas fa-moon');
+                    }
+                };
+
+                // On page load, check for saved theme
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                applyTheme(savedTheme);
+
+                themeToggleBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const newTheme = html.classList.contains('dark') ? 'light' : 'dark';
+                        localStorage.setItem('theme', newTheme);
+                        applyTheme(newTheme);
+                    });
+                });
+            };
+            
+            const initHeaderScroll = () => {
+                const header = document.getElementById('header');
+                if (!header) return;
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 10) {
+                        header.classList.add('bg-brand-gray/80', 'dark:bg-brand-dark/80', 'backdrop-blur-lg', 'shadow-md');
+                    } else {
+                        header.classList.remove('bg-brand-gray/80', 'dark:bg-brand-dark/80', 'backdrop-blur-lg', 'shadow-md');
                     }
                 });
-            }, { threshold: 0.1 });
-            fadeInElements.forEach(el => observer.observe(el));
+            };
+
+            const initMobileMenu = () => {
+                const menuBtn = document.getElementById('menu-btn');
+                const mobileMenu = document.getElementById('mobile-menu');
+                const mobileLinks = document.querySelectorAll('.mobile-link');
+                if (!menuBtn || !mobileMenu) return;
+                const menuIcon = menuBtn.querySelector('i');
+
+                const toggleMenu = () => {
+                    mobileMenu.classList.toggle('-translate-x-full');
+                    menuIcon.className = mobileMenu.classList.contains('-translate-x-full') ? 'fas fa-bars' : 'fas fa-times';
+                };
+
+                menuBtn.addEventListener('click', toggleMenu);
+                mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+            };
             
-            // Rocket Cursor Follower
-            const rocketCursor = document.querySelector('.rocket-cursor');
-            let movementTimeout;
-
-            window.addEventListener('mousemove', (e) => {
-                rocketCursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-
-                rocketCursor.classList.add('is-moving');
-                clearTimeout(movementTimeout);
-                movementTimeout = setTimeout(() => {
-                    rocketCursor.classList.remove('is-moving');
-                }, 100);
-            }, { passive: true });
+            const initFadeInObserver = () => {
+                const fadeInElements = document.querySelectorAll('.fade-in-element');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                fadeInElements.forEach(el => observer.observe(el));
+            };
             
-            const interactiveElements = document.querySelectorAll('a, button, .service-card');
-            interactiveElements.forEach(el => {
-                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-pointer'));
-                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-pointer'));
-            });
+            const initCursorFollower = () => {
+                const rocketCursor = document.querySelector('.rocket-cursor');
+                if (!rocketCursor) return;
+                let movementTimeout;
 
-
-            // Service Card Bubble Animation
-            const serviceCards = document.querySelectorAll('.service-card');
-            serviceCards.forEach(card => {
-                card.addEventListener('click', (e) => {
-                    card.classList.add('clicked');
-                    card.addEventListener('animationend', () => {
-                        card.classList.remove('clicked');
-                    }, { once: true });
+                window.addEventListener('mousemove', (e) => {
+                    rocketCursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+                    rocketCursor.classList.add('is-moving');
+                    clearTimeout(movementTimeout);
+                    movementTimeout = setTimeout(() => {
+                        rocketCursor.classList.remove('is-moving');
+                    }, 100);
+                }, { passive: true });
+                
+                const interactiveElements = document.querySelectorAll('a, button, .service-card, .faq-header');
+                interactiveElements.forEach(el => {
+                    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-pointer'));
+                    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-pointer'));
                 });
-            });
+            };
 
-            // Contact Form
-            const contactForm = document.getElementById('contact-form');
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const formContainer = document.getElementById('contact-form-container');
-                formContainer.innerHTML = `
-                    <div class="text-center bg-white/20 p-8 rounded-lg fade-in-element is-visible">
-                        <h3 class="text-2xl font-bold text-white mb-4">Thank You!</h3>
-                        <p class="text-brand-dark-dark text-lg">Your message has been sent. We'll get back to you shortly.</p>
-                    </div>`;
-            });
+            const initServiceCardAnimation = () => {
+                 document.querySelector('#services')?.addEventListener('click', (e) => {
+                    const card = e.target.closest('.service-card');
+                    if (card) {
+                        card.classList.add('clicked');
+                        card.addEventListener('animationend', () => {
+                            card.classList.remove('clicked');
+                        }, { once: true });
+                    }
+                });
+            };
+            
+            const initTestimonialSlider = () => {
+                const track = document.getElementById('testimonial-track');
+                const prevBtn = document.getElementById('prev-testimonial');
+                const nextBtn = document.getElementById('next-testimonial');
+                if (!track || !prevBtn || !nextBtn) return;
 
+                let currentIndex = 0;
+                const slides = track.children;
+                const totalSlides = slides.length;
+                if (totalSlides === 0) return;
+
+                const updateSlider = () => {
+                    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                };
+
+                nextBtn.addEventListener('click', () => {
+                    currentIndex = (currentIndex + 1) % totalSlides;
+                    updateSlider();
+                });
+
+                prevBtn.addEventListener('click', () => {
+                    currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                    updateSlider();
+                });
+            };
+
+            const initFaqAccordion = () => {
+                const container = document.getElementById('faq-container');
+                if (!container) return;
+                container.addEventListener('click', (e) => {
+                    const header = e.target.closest('.faq-header');
+                    if (!header) return;
+                    const item = header.parentElement;
+                    item.classList.toggle('active');
+                });
+            };
+
+            const initFormValidation = () => {
+                const form = document.getElementById('contact-form');
+                if (!form) return;
+                const nameInput = document.getElementById('name');
+                const emailInput = document.getElementById('email');
+                const enquiryInput = document.getElementById('enquiry');
+
+                const showError = (input, message) => {
+                    input.classList.add('invalid');
+                    const errorEl = input.nextElementSibling;
+                    if(errorEl) errorEl.textContent = message;
+                };
+
+                const hideError = (input) => {
+                    input.classList.remove('invalid');
+                    const errorEl = input.nextElementSibling;
+                    if(errorEl) errorEl.textContent = '';
+                };
+                
+                const validateEmail = (email) => {
+                    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                    return re.test(String(email).toLowerCase());
+                };
+
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    let isValid = true;
+                    
+                    if (nameInput.value.trim() === '') {
+                        showError(nameInput, 'Full Name is required.');
+                        isValid = false;
+                    } else {
+                        hideError(nameInput);
+                    }
+
+                    if (emailInput.value.trim() === '') {
+                        showError(emailInput, 'Email is required.');
+                        isValid = false;
+                    } else if (!validateEmail(emailInput.value)) {
+                         showError(emailInput, 'Please enter a valid email address.');
+                         isValid = false;
+                    } else {
+                        hideError(emailInput);
+                    }
+                    
+                    if (enquiryInput.value.trim() === '') {
+                        showError(enquiryInput, 'Enquiry is required.');
+                        isValid = false;
+                    } else {
+                        hideError(enquiryInput);
+                    }
+
+                    if (isValid) {
+                        const formContainer = document.getElementById('contact-form-container');
+                        formContainer.innerHTML = `
+                            <div class="text-center bg-white/20 p-8 rounded-lg fade-in-element is-visible">
+                                <h3 class="text-2xl font-bold text-white mb-4">Thank You!</h3>
+                                <p class="text-brand-dark-dark text-lg">Your message has been sent. We'll get back to you shortly.</p>
+                            </div>`;
+                    }
+                });
+            };
+            
+            // --- INITIALIZE ALL ---
+            renderServices();
+            renderSteps();
+            renderFeatures();
+            renderTestimonials();
+            renderFaqs();
+
+            initTheme();
+            initHeaderScroll();
+            initMobileMenu();
+            initFadeInObserver();
+            initCursorFollower();
+            initServiceCardAnimation();
+            initTestimonialSlider();
+            initFaqAccordion();
+            initFormValidation();
         });
     </script>
 </body>
