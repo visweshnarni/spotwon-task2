@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RocketTransform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              poppins: ['Poppins', 'sans-serif'],
+            },
+            colors: {
+              'brand-gray': {
+                light: '#B0B0B0',
+                DEFAULT: '#B0B0B0',
+                dark: '#e0e0e0',
+              },
+              'brand-dark': {
+                light: '#455A64',
+                DEFAULT: '#263238',
+                dark: '#212B30',
+              },
+              'brand-accent': {
+                light: '#FF7C6B',
+                DEFAULT: '#ff6941',
+                dark: '#ff4b33',
+              },
+            },
+            backgroundImage: {
+              'hero-pattern': "url('https://picsum.photos/1200/800?grayscale&blur=2')",
+              'about-boxes-bg': "url('https://picsum.photos/seed/bg1/1920/1080?grayscale')",
+              'why-us-bg': "url('https://picsum.photos/seed/bg3/1920/1080?grayscale')",
+            }
+          }
+        }
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/"
+  }
+}
+</script>
+</head>
+  <body class="bg-brand-gray font-poppins antialiased">
+    <div id="root"></div>
+  </body>
+</html>
